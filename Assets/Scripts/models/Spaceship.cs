@@ -1,3 +1,4 @@
+using System;
 using DefaultNamespace;
 using DefaultNamespace.models;
 using Unity.Mathematics.Geometry;
@@ -60,4 +61,58 @@ public class Spaceship : Entity
         this.ay = ay;
         this.az = az;
     }
+
+    public float SmoothStep(float x, float threshold)
+    {
+        float STEEPNESS = 1.0f;
+        return 1.0f / (1.0f + Mathf.Exp(-(x - threshold) * STEEPNESS));
+    }
+
+    public Vector3 LorentzVelocityTransformation(Vector3 movingVelocity, Vector3 frameVelocity)
+    {
+        float v = Vector3.Magnitude(frameVelocity);
+        
+        if (v > 0.0)
+        {
+            Vector3 velocityAxis = -frameVelocity / v;
+            float gamma = 1.0f / Mathf.Sqrt(1.0f - v * v);
+            
+            float movingParameter = Vector3.Dot(movingVelocity, velocityAxis);
+            Vector3 movingPerpendicular = movingVelocity - velocityAxis * movingParameter;
+
+            float denom = 1.0f + v * movingParameter;
+            return (velocityAxis * (movingParameter + v) + movingPerpendicular / gamma) / denom;
+
+        }
+        
+        
+        return movingVelocity;
+    }
+
+    public Vector3 RayTraceLogic(Vector3 cameraPos, Vector3 direction, float stepSize, int maxSteps)
+    {
+        float r = cameraPos.magnitude;
+        float u = 1 / r;
+        float du = -u * Vector3.Dot(direction.normalized, cameraPos.normalized);
+
+        for (int step = 0; step < maxSteps; step++)
+        {
+            float duNext = du - u * stepSize * (1-3*u*u);
+            float uNext = u + stepSize * du;
+
+            if (uNext < 0) break;
+            du = duNext;
+            u = uNext;
+            Vector3 pos = cameraPos + direction.normalized * u;
+            // Debug.Log("pos: " + pos + " du: " + du + " u: " + u);
+            
+        }
+
+        Vector3 planeNormal = cameraPos.normalized;
+        Vector3 tangent = Vector3.Cross(Vector3.Cross(planeNormal, direction), planeNormal).normalized;
+        float phi = stepSize * maxSteps;
+        Vector3 position = (planeNormal * Mathf.Cos(phi) + tangent * Mathf.Sin(phi)) / u;
+        return position;
+    }
+    
 }

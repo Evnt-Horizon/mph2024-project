@@ -25,13 +25,15 @@ namespace DefaultNamespace.models
             float otherY = other.transform.position.y;
             float otherZ = other.transform.position.z;
             
-            distanceToBlackhole = Mathf.Sqrt(
-                Mathf.Pow(thisX - otherX, 2) +
-                Mathf.Pow(thisY - otherY, 2) +
-                Mathf.Pow(thisZ - otherZ, 2)
-            );
+            float differenceX = thisX - otherX - Constants.RS;
+            float differenceY = thisY - otherY - Constants.RS;
+            float differenceZ = thisZ - otherZ - Constants.RS;
 
-            return distanceToBlackhole;
+            return Mathf.Sqrt(
+                Mathf.Pow(differenceX, 2) +
+                Mathf.Pow(differenceY, 2) +
+                Mathf.Pow(differenceZ, 2)
+            );
         }
     }
 }
