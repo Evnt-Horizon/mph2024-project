@@ -1,16 +1,10 @@
-using System;
 using UnityEngine;
 using Unity.Cinemachine;
-using Unity.VisualScripting;
 
-public class CameraController : MonoBehaviour
+public class MainCameraController : MonoBehaviour
 {
     public CinemachineFollowZoom cinemachineFollowZoom;
     
-    [Header("Variables")]
-    public float verticalSpeed = 2.0f;
-    public float horizontalSpeed = 2.0f;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
