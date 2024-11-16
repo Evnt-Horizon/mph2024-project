@@ -1,16 +1,15 @@
-using System;
 using UnityEngine;
 using Unity.Cinemachine;
-using Unity.VisualScripting;
 
-public class CameraController : MonoBehaviour
+public class MainCameraController : MonoBehaviour
 {
     public CinemachineFollowZoom cinemachineFollowZoom;
-    
-    [Header("Variables")]
-    public float verticalSpeed = 2.0f;
-    public float horizontalSpeed = 2.0f;
 
+    public CinemachineBrain cinemachineBrain;
+
+    public CinemachineCamera mainCamera;
+    public CinemachineCamera shipCamera;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
@@ -21,6 +20,8 @@ public class CameraController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        mainCamera.Priority = 11;
     }
 
     // Update is called once per frame
@@ -30,6 +31,18 @@ public class CameraController : MonoBehaviour
         if(zoomFactor != 0)
         {
             cinemachineFollowZoom.Width = Mathf.Clamp(cinemachineFollowZoom.Width + zoomFactor, 2, 10);
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            if (mainCamera.Priority == 11)
+            {
+                shipCamera.Priority = 11;
+                mainCamera.Priority = 10;
+            } else {
+                mainCamera.Priority = 11;
+                shipCamera.Priority = 10;
+            }
         }
     }
     

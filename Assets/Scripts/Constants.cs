@@ -4,8 +4,7 @@
  * Calculated and universal constants used in our projects
  */
 {
-    public class constants
+    public class Constants
     {
-        
     }
 }
