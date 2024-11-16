@@ -9,6 +9,9 @@ namespace DefaultNamespace
 {
     public class InteractionLogiv : MonoBehaviour
     {
-        
+        private void CameraMotion()
+        {
+            
+        }
     }
 }
