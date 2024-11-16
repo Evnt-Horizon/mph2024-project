@@ -8,25 +8,31 @@ namespace DefaultNamespace.models
     public class Entity: MonoBehaviour
     {
         // Position Coordinates of the object
-        public double x, y, z;
+        public float x, y, z;
+        
+        public float distanceToBlackhole;
         
         /**
          * This calculates the distance between this entity and another entity.
          */
-        public double CalculateDistance(Entity other)
+        public float CalculateDistance(Entity other)
         {
-            double thisX = transform.position.x;
-            double thisY = transform.position.y;
-            double thisZ = transform.position.z;
+            float thisX = transform.position.x;
+            float thisY = transform.position.y;
+            float thisZ = transform.position.z;
             
-            double otherX = other.transform.position.x;
-            double otherY = other.transform.position.y;
-            double otherZ = other.transform.position.z;
+            float otherX = other.transform.position.x;
+            float otherY = other.transform.position.y;
+            float otherZ = other.transform.position.z;
+            
+            float differenceX = thisX - otherX - Constants.RS;
+            float differenceY = thisY - otherY - Constants.RS;
+            float differenceZ = thisZ - otherZ - Constants.RS;
 
             return Mathf.Sqrt(
-                Mathf.Pow((float)(thisX - otherX), 2) +
-                Mathf.Pow((float)(thisY - otherY), 2) +
-                Mathf.Pow((float)(thisZ - otherZ), 2)
+                Mathf.Pow(differenceX, 2) +
+                Mathf.Pow(differenceY, 2) +
+                Mathf.Pow(differenceZ, 2)
             );
         }
     }
