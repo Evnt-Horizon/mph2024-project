@@ -9,20 +9,7 @@ public class SceneChangerOnCollision : MonoBehaviour
     // Called when the object this script is attached to collides with another object
     private void OnTriggerEnter(Collider collider)
     {
-            LoadScene();
-    }
-
-    private void LoadScene()
-    {
-        // Check if the scene name is valid
-        if (!string.IsNullOrEmpty(sceneToLoad))
-        {
-            Debug.Log("Loading scene: " + sceneToLoad);
-            SceneManager.LoadScene(sceneToLoad);
-        }
-        else
-        {
-            Debug.LogError("Scene name is not set or invalid.");
-        }
+        Debug.Log("Collision"); 
+        SceneManager.LoadScene(sceneToLoad);
     }
 }

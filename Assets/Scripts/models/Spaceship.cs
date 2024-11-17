@@ -4,6 +4,7 @@ using DefaultNamespace;
 using DefaultNamespace.models;
 using Unity.Mathematics.Geometry;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Math = Unity.Mathematics.Geometry.Math;
 
 /**
@@ -15,6 +16,9 @@ public class Spaceship : Entity
 {
     // Time past in the sim.
     float time;
+    
+    // If it start to fall down.
+    private bool falling;
 
     public HUDCotroller hudController;
     public OrbitPath orbitPath;
@@ -38,6 +42,7 @@ public class Spaceship : Entity
     void Start()
     {
         time = 0;
+        falling = false;
 
         // ----
         // Ver 1 Orbit
@@ -76,6 +81,13 @@ public class Spaceship : Entity
 
     void FixedUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (!falling)
+            {
+                falling = true;
+            }
+        }
         // ----
         // Ver 1 Orbit
         // double deltaTime = Time.deltaTime;
@@ -117,6 +129,12 @@ public class Spaceship : Entity
 
         // ----
         // Ver 2 Orbit
+        if (falling)
+        {
+            orbitPath.xAxis = orbitPath.xAxis -= 1 * Time.deltaTime;
+            orbitPath.zAxis = orbitPath.zAxis -= 1 * Time.deltaTime;
+        }
+        
         if (orbitPeriod < 0.1f)
         {
             orbitPeriod = 0.1f;
