@@ -10,6 +10,8 @@ public class MainCameraController : MonoBehaviour
     public CinemachineCamera mainCamera;
     public CinemachineCamera shipCamera;
     
+    public SpaceshipEntity theShip;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
@@ -39,9 +41,11 @@ public class MainCameraController : MonoBehaviour
             {
                 shipCamera.Priority = 11;
                 mainCamera.Priority = 10;
+                theShip.setScale(0.05f);
             } else {
                 mainCamera.Priority = 11;
                 shipCamera.Priority = 10;
+                theShip.setScale(0.5f);
             }
         }
     }
