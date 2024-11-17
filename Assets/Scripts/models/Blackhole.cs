@@ -10,9 +10,6 @@ using UnityEngine;
  */
 public class Blackhole : Entity
 {
-    // Gravity force of the object, as a vector that is always pointing towards the object (Fg).
-    public float gravity;
-    
     // List of objects that is in relation to the object's gravity
     public List<Spaceship> objectsInGravity;
     
@@ -26,28 +23,14 @@ public class Blackhole : Entity
         
         // Scale it to proper radius
         transform.localScale = new Vector3(
-            Constants.RS * 2 * Constants.SCALE,
-            Constants.RS * 2 * Constants.SCALE,
-            Constants.RS * 2 * Constants.SCALE
+            (float) Constants.RS_Unity * 2,
+            (float) Constants.RS_Unity * 2,
+            (float) Constants.RS_Unity * 2
         );
     }
 
     // Update is called once per frame
     void Update()
     {
-        x = transform.position.x;
-        y = transform.position.y;
-        z = transform.position.z;
-        
-        for (int i = 0; i < objectsInGravity.Count; i++)
-        {
-            Spaceship other = objectsInGravity[i];
-
-            float forceX = gravity * (x - other.x);
-            float forceY = gravity * (y - other.y);
-            float forceZ = gravity * (z - other.z);
-                
-            other.SetAcceleration(forceX, forceY, forceZ);
-        }
     }
 }

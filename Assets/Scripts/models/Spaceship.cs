@@ -13,9 +13,12 @@ using Math = Unity.Mathematics.Geometry.Math;
 public class Spaceship : Entity
 {
     // Velocity of the object
-    public float vx, vy, vz;
+    public double vx, vy, vz;
     // Acceleration of the object
-    public float ax, ay, az;
+    public double ax, ay, az;
+    
+    // Gravitational acceleration that the object is experiencing (from the blackhole, centripital).
+    public double g;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,14 +27,23 @@ public class Spaceship : Entity
         x = transform.position.x;
         y = transform.position.y;
         z = transform.position.z;
+
+        Vector3 oPos = new Vector3((float) x, (float) y, (float) z);
         
-        // Set the transform component of the object with the new position
-        transform.position = new Vector3(x, y, z);
+        // Calculate the initial velocity of the object
+        vx = CalculateTangentialShipVelocity(oPos);
+        vy = 0.0f;
+        vz = 0.0f;
+        
+        // Calculate the initial acceleration of the object
+        g = CalculateCentripitalAcceleration(oPos);
     }
 
     // Update is called once per frame
     void Update()
     {
+        double deltaTime = Time.deltaTime;
+        
         x = transform.position.x;
         y = transform.position.y;
         z = transform.position.z;
@@ -39,39 +51,40 @@ public class Spaceship : Entity
         // As the object moves in circle, we need to consider the centrifulgal force
         // We calculate the acceleration of the object by using the formula a = v^2 / r
         // r will be from the center of the blackhole (0, 0, 0)
-        float r = Mathf.Sqrt(
-            Mathf.Pow((float)x, 2) +
-            Mathf.Pow((float)y, 2) +
-            Mathf.Pow((float)z, 2)
-        );
+        double r = new Vector3((float) x, (float) y, (float) z).magnitude;
         
+        // Calculate the acceleration of the object in each axis using trigonometry
+        // Angle between the direction vector and the x-axis
+        float angleX = Mathf.Acos((float) (x / r));
+        // Angle between the direction vector and the y-axis
+        float angleY = 0.0f;    // We keep this at 0 because we don't want to move in the y-axis.
+        // Angle between the direction vector and the z-axis
+        float angleZ = Mathf.Acos((float) (z / r));
+        
+        ax = g * Mathf.Cos(angleX);
+        ay = g * Mathf.Cos(angleY);
+        az = g * Mathf.Cos(angleZ);
         
         // Update the velocity of the object by adding the acceleration to the velocity TO-DO
-        vx += ax; // To-Check
-        vy += ay;
-        vz += az;
+        vx += ax * deltaTime; // TO-CHECK
+        vy += ay * deltaTime;
+        vz += az * deltaTime;
         
         // Update the position of the object by adding the velocity to the position TO-DO
-        x += vx;
-        y += vy;
-        z += vz;
+        x += vx * deltaTime; // TO-CHECK
+        y += vy * deltaTime;
+        z += vz * deltaTime;
         
         // Update the transform component of the object with the new position
-        transform.position = new Vector3(x, y, z);
-    }
-    
-    public void SetAcceleration(float ax, float ay, float az)
-    {
-        this.ax = ax;
-        this.ay = ay;
-        this.az = az;
+        transform.position = new Vector3((float) x, (float) y, (float) z);
     }
 
-    public float SmoothStep(float x, float threshold)
+    public double SmoothStep(double x, double threshold)
     {
-        float STEEPNESS = 1.0f;
-        return 1.0f / (1.0f + Mathf.Exp(-(x - threshold) * STEEPNESS));
+        double STEEPNESS = 1.0f;
+        return 1.0f / (1.0f + Mathf.Exp((float) (-(x - threshold) * STEEPNESS)));
     }
+    
     // To-DO
     public Vector3 LorentzVelocityTransformation(Vector3 sourceVelocity, Vector3 observerVelocity)
     {
@@ -100,92 +113,100 @@ public class Spaceship : Entity
         return (position - par * direction + direction * par * mult).magnitude;
     }
 
-    public Vector3 RayTraceLogic(Vector3 cameraPos, Vector3 direction, float stepSize, int maxSteps)
+    public Vector3 RayTraceLogic(Vector3 cameraPos, Vector3 direction, double stepSize, int maxSteps)
     {
-        float r = cameraPos.magnitude;
-        float u = 1 / r;
-        float du = -u * Vector3.Dot(direction.normalized, cameraPos.normalized);
+        double r = cameraPos.magnitude;
+        double u = 1 / r;
+        double du = -u * Vector3.Dot(direction.normalized, cameraPos.normalized);
 
         for (int step = 0; step < maxSteps; step++)
         {
-            float duNext = du - u * stepSize * (1-3*u*u);
-            float uNext = u + stepSize * du;
+            double duNext = du - u * stepSize * (1-3*u*u);
+            double uNext = u + stepSize * du;
 
             if (uNext < 0) break;
             du = duNext;
             u = uNext;
-            Vector3 pos = cameraPos + direction.normalized * u;
+            Vector3 pos = cameraPos + direction.normalized * (float) u;
             // Debug.Log("pos: " + pos + " du: " + du + " u: " + u);
             
         }
 
         Vector3 planeNormal = cameraPos.normalized;
         Vector3 tangent = Vector3.Cross(Vector3.Cross(planeNormal, direction), planeNormal).normalized;
-        float phi = stepSize * maxSteps;
-        Vector3 position = (planeNormal * Mathf.Cos(phi) + tangent * Mathf.Sin(phi)) / u;
+        double phi = stepSize * maxSteps;
+        Vector3 position = (planeNormal * Mathf.Cos((float) phi) + tangent * Mathf.Sin((float) phi)) / (float) u;
         return position;
     }
 
-    public float CalculateTimeCurvature(Vector3 oPos)
+    public double CalculateTimeCurvature(Vector3 oPos)
     {
-        float R = oPos.magnitude;
+        double R = oPos.magnitude;
         int c = Constants.v_light; // speed of light
-        float Rs = Constants.RS;
+        double Rs = Constants.RS;
         
-        float gTT = (1-(Rs/R) * Mathf.Pow(c, 2));
+        double gTT = (1-(Rs/R) * Mathf.Pow(c, 2));
         
         return gTT;
     }
     
-    public float CalculateSpaceCurvature(Vector3 oPos)
+    public double CalculateSpaceCurvature(Vector3 oPos)
     {
-        float R = oPos.magnitude;
+        double R = oPos.magnitude;
         
-        float gRR = 1/(1-(Constants.RS/R));
+        double gRR = 1/(1-(Constants.RS/R));
         return gRR;
     }
 
-    public float CalculateGravitationalLensing(Vector3 oPos)
+    public double CalculateGravitationalLensing(Vector3 oPos)
     {
         return 2*Constants.RS/oPos.magnitude; //radians
     }
     
-    public float TimeDilationByShip(Vector3 oPos) 
+    public double TimeDilationByShip(Vector3 oPos) 
     {
-        return Mathf.Sqrt(CalculateTimeCurvature(oPos)); // % of which time goes slower/faster than light
+        return Mathf.Sqrt((float) CalculateTimeCurvature(oPos)); // % of which time goes slower/faster than light
     }
 
-    public float CalculateGravitationalRedshift(Vector3 oPos)
+    public double CalculateGravitationalRedshift(Vector3 oPos)
     {
-        return 1 / Mathf.Sqrt(CalculateTimeCurvature(oPos));
+        return 1 / Mathf.Sqrt((float) CalculateTimeCurvature(oPos));
     }
 
-    public float SpaceDilationByShip(Vector3 oPos)
+    public double SpaceDilationByShip(Vector3 oPos)
     {
         // TO-DO
         return 1;
     }
 
-    public float CalculateLorentzTime(float time, Vector3 MovingVelocity)
+    public double CalculateLorentzTime(double time, Vector3 MovingVelocity)
     {
-        float relativeTime = time / Mathf.Sqrt(1-(Mathf.Pow(MovingVelocity.magnitude, 2)/Mathf.Pow(Constants.v_light, 2)));
+        double relativeTime = time / Mathf.Sqrt(1-(Mathf.Pow(MovingVelocity.magnitude, 2)/Mathf.Pow(Constants.v_light, 2)));
         return relativeTime;
     }
     
-    public double CalculatetangentialShipVelocity(Vector3 oPos)
+    public float CalculateTangentialShipVelocity(Vector3 oPos)
     {
-        return Mathf.Sqrt((((Constants.G * Constants.M) / oPos.magnitude) * (1 - (Constants.RS / oPos.magnitude))));
+        Debug.Log("rs: " + Constants.RS_Unity);
+        Debug.Log("r: " + oPos.magnitude);
+        Debug.Log("Constants.G_Unity: " + Constants.G_Unity);
+        Debug.Log("Constants.M_Unity: " + Constants.M_Unity);
+        Debug.Log("(1 - Constants.RS_Unity / oPos.magnitude): " + (1 - Constants.RS_Unity / oPos.magnitude));
+        double f = Constants.G_Unity * Constants.M_Unity / oPos.magnitude * (1 - Constants.RS_Unity / oPos.magnitude);
+        Debug.Log("f: " + f);
+        return Mathf.Sqrt((float) f);
     }
 
-    public float CalculateCentripitalAcceleration(Vector3 oPos)
+    public double CalculateCentripitalAcceleration(Vector3 oPos)
     {
-        return Mathf.Pow(CalculatetangentialShipVelocity(oPos), 2);
+        return Mathf.Pow(CalculateTangentialShipVelocity(oPos), 2);
     }
 
     public double CalculateCriticalNetRelavisticAcceleration(Vector3 oPos)
     {
-        return ((Constants.G * Constants.M / Mathf.Pow(oPos.magnitude, 2) * Mathf.Pow((1-(Constants.RS / oPos.magnitude)), 0.5f)));
+        return ((Constants.G * Constants.M / Mathf.Pow(oPos.magnitude, 2) * Mathf.Pow((1 - (float) (Constants.RS / oPos.magnitude)), 0.5f)));
     }
+    
     // Relativity makes sure that total acceleration is less than critical
     public bool RelativityCheck(Vector3 oPos)
     {
