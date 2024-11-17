@@ -14,7 +14,9 @@ namespace DefaultNamespace
         public static float SCALE = 5 / RS;
         // universal gravitational constant
         public static double G = 6.67430 * Mathf.Pow(10, -11);
+        public static double M = 1.314 * Mathf.Pow(10, 41);
         
         public static int v_light = 3 * 10 ^ 8;
+        
     }
 }

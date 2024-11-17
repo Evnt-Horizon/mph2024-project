@@ -171,4 +171,28 @@ public class Spaceship : Entity
         float relativeTime = time / Mathf.Sqrt(1-(Mathf.Pow(MovingVelocity.magnitude, 2)/Mathf.Pow(Constants.v_light, 2)));
         return relativeTime;
     }
+    
+    public float CalculatetangentialShipVelocity(Vector3 oPos)
+    {
+        return Mathf.Sqrt(((Constants.G * Constants.M) / Constants.r * (1 - (Constants.RS / oPos.magnitude))));
+    }
+
+    public float CalculateCentripitalAcceleration(Vector3 oPos)
+    {
+        return Mathf.Pow(CalculatetangentialShipVelocity(oPos), 2);
+    }
+
+    public double CalculateCriticalNetRelavisticAcceleration(Vector3 oPos)
+    {
+        return ((Constants.G * Constants.M / Mathf.Pow(oPos.magnitude, 2) * Mathf.Pow((1-(Constants.RS / oPos.magnitude)), 0.5f)));
+    }
+    // Relativity makes sure that total acceleration is less than critical
+    public bool RelativityCheck(Vector3 oPos)
+    {
+        if (CalculateCentripitalAcceleration(oPos) > CalculateCriticalNetRelavisticAcceleration(oPos))
+        {
+            return true;
+        }
+        return false;
+    }
 }
