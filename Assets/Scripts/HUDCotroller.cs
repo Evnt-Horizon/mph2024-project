@@ -7,7 +7,6 @@ public class HUDCotroller : MonoBehaviour
     public TextMeshProUGUI timeText;
     
     public TextMeshProUGUI energyLossText;
-    public TextMeshProUGUI wavelengthText;
     public TextMeshProUGUI timeDilationText;
     
     public TextMeshProUGUI posXText;
@@ -27,11 +26,6 @@ public class HUDCotroller : MonoBehaviour
     public void setEnergyLoss(string energyLoss)
     {
         energyLossText.text = "Energy Loss: " + energyLoss;
-    }
-
-    public void setWavelength(string wavelength)
-    {
-        wavelengthText.text = "Wavelength: " + wavelength;
     }
     
     public void setTimeDilation(string timeDilation)

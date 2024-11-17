@@ -12,6 +12,9 @@ namespace DefaultNamespace
         // Schwarzschild radius (km)
         public static double RS = 1.92 * Math.Pow(10, 11);
         public static double RS_Unity = 5;
+        // R
+        public static double R = Math.Sqrt(Math.Pow(6.03 * Math.Pow(10, 14), 2) + Math.Pow(6.03 * Math.Pow(10, 14), 2));
+        public static double R_Unity = R * RS_Unity / RS;
         // The scale from km to unity (the black hole is always 5 unity in radius)
         public static double SCALE = RS_Unity / RS;
         // universal gravitational constant
