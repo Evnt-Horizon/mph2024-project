@@ -400,9 +400,15 @@ MonoBehaviour:
   x: 0
   y: 0
   z: 0
+  orbitPath:
+    xAxis: 10
+    zAxis: 10
+  orbitProgress: 0
+  orbitPeriod: 3
+  orbitActive: 1
   vx: 0.8
   vy: 0
-  vz: 3
+  vz: 1
   ax: 0
   ay: 0
   az: 0
@@ -490,7 +496,7 @@ Transform:
   m_GameObject: {fileID: 1048325112}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.5, y: 0, z: 0}
+  m_LocalPosition: {x: 5, y: 0, z: 5}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
