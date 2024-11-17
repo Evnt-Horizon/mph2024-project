@@ -11,7 +11,7 @@ using UnityEngine;
 public class Blackhole : Entity
 {
     // Gravity force of the object, as a vector that is always pointing towards the object (Fg).
-    public float gravityForce;
+    public float gravity;
     
     // List of objects that is in relation to the object's gravity
     public List<Spaceship> objectsInGravity;
@@ -25,7 +25,11 @@ public class Blackhole : Entity
         z = transform.position.z;
         
         // Scale it to proper radius
-        transform.localScale = new Vector3((float)Constants.RS * 2, (float)Constants.RS * 2, (float)Constants.RS * 2);
+        transform.localScale = new Vector3(
+            Constants.RS * 2 * Constants.SCALE,
+            Constants.RS * 2 * Constants.SCALE,
+            Constants.RS * 2 * Constants.SCALE
+        );
     }
 
     // Update is called once per frame
@@ -38,31 +42,10 @@ public class Blackhole : Entity
         for (int i = 0; i < objectsInGravity.Count; i++)
         {
             Spaceship other = objectsInGravity[i];
-            
-            // We will always make y = 0 as we only work with x and z as a 2D plane
-            
-            float deltaX = other.x - x;
-            float deltaZ = other.z - z;
-            
-            // Calculate the angle between the centripital directional vector and the x-axis
-            float angleX = Mathf.Atan(deltaX / deltaZ);
-            // Calculate the angle between the centripital directional vector and the z-axis
-            float angleZ = Mathf.Atan(deltaZ / deltaX);
 
-
-            float forceX = Mathf.Abs(Mathf.Cos(angleX) * gravityForce);
-            float forceY = 0;
-            float forceZ = Mathf.Abs(Mathf.Sin(angleZ) * gravityForce);
-            
-            // Adjust angles based on the quadrant
-            if (other.x >= 0)
-            {
-                forceX = -forceX;
-            }
-            if (other.z >= 0)
-            {
-                forceZ = -forceZ;
-            }
+            float forceX = gravity * (x - other.x);
+            float forceY = gravity * (y - other.y);
+            float forceZ = gravity * (z - other.z);
                 
             other.SetAcceleration(forceX, forceY, forceZ);
         }

@@ -8,8 +8,10 @@ namespace DefaultNamespace
 {
     public class Constants
     {
-        // Schwarzschild radius
-        public static float RS = 192;
+        // Schwarzschild radius (km)
+        public static float RS = 1.92f * Mathf.Pow(10, 11);
+        // The scale from km to unity (the black hole is always 5 unity in radius)
+        public static float SCALE = 5 / RS;
         // universal gravitational constant
         public static double G = 6.67430 * Mathf.Pow(10, -11);
     }
