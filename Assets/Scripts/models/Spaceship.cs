@@ -3,6 +3,7 @@ using DefaultNamespace;
 using DefaultNamespace.models;
 using Unity.Mathematics.Geometry;
 using UnityEngine;
+using Math = Unity.Mathematics.Geometry.Math;
 
 /**
  * This is a class that contains all the logic for moving objects in the scene.
@@ -89,6 +90,12 @@ public class Spaceship : Entity
         return movingVelocity;
     }
 
+    public Vector3 Contract(Vector3 position, Vector3 direction, float mult)
+    {
+        float par = Vector3.Dot(position, direction);
+        return (position - par * direction + direction * par * mult);
+    }
+
     public Vector3 RayTraceLogic(Vector3 cameraPos, Vector3 direction, float stepSize, int maxSteps)
     {
         float r = cameraPos.magnitude;
@@ -114,5 +121,50 @@ public class Spaceship : Entity
         Vector3 position = (planeNormal * Mathf.Cos(phi) + tangent * Mathf.Sin(phi)) / u;
         return position;
     }
+
+    public float CalculateTimeCurvature(Vector3 oPos)
+    {
+        float R = oPos.magnitude;
+        int c = Constants.v_light; // speed of light
+        float Rs = Constants.RS;
+        
+        float gTT = (1-(Rs/R) * Mathf.Pow(c, 2));
+        
+        return gTT;
+    }
     
+    public float CalculateSpaceCurvature(Vector3 oPos)
+    {
+        float R = oPos.magnitude;
+        
+        float gRR = 1/(1-(Constants.RS/R));
+        return gRR;
+    }
+
+    public float CalculateGravitationalLensing(Vector3 oPos)
+    {
+        return 2*Constants.RS/oPos.magnitude; //radians
+    }
+    
+    public float TimeDilationByShip(Vector3 oPos) 
+    {
+        return Mathf.Sqrt(CalculateTimeCurvature(oPos)); // % of which time goes slower/faster than light
+    }
+
+    public float CalculateGravitationalRedshift(Vector3 oPos)
+    {
+        return 1 / Mathf.Sqrt(CalculateTimeCurvature(oPos));
+    }
+
+    public float SpaceDilationByShip(Vector3 oPos)
+    {
+        // TO-DO
+        return 1;
+    }
+
+    public float CalculateLorentzTime(float time, Vector3 MovingVelocity)
+    {
+        float relativeTime = time / Mathf.Sqrt(1-(Mathf.Pow(MovingVelocity.magnitude, 2)/Mathf.Pow(Constants.v_light, 2)));
+        return relativeTime;
+    }
 }
