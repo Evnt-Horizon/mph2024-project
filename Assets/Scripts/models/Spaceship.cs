@@ -31,12 +31,12 @@ public class Spaceship : Entity
         Vector3 oPos = new Vector3((float) x, (float) y, (float) z);
         
         // Calculate the initial velocity of the object
-        vx = CalculateTangentialShipVelocity(oPos);
-        vy = 0.0f;
-        vz = 0.0f;
+        // vx = CalculateTangentialShipVelocity(oPos);
+        // vy = 0.0f;
+        // vz = 0.0f;
         
         // Calculate the initial acceleration of the object
-        g = CalculateCentripitalAcceleration(oPos);
+        // g = CalculateCentripitalAcceleration(oPos);
     }
 
     // Update is called once per frame
@@ -62,7 +62,7 @@ public class Spaceship : Entity
         float angleZ = Mathf.Acos((float) (z / r));
         
         ax = g * Mathf.Cos(angleX);
-        ay = g * Mathf.Cos(angleY);
+        ay = 0.0f; // We keep this at 0 because we don't want to move in the y-axis.
         az = g * Mathf.Cos(angleZ);
         
         // Update the velocity of the object by adding the acceleration to the velocity TO-DO
