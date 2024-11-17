@@ -5,12 +5,12 @@ public class MainCameraController : MonoBehaviour
 {
     public CinemachineFollowZoom cinemachineFollowZoom;
 
-    public CinemachineBrain cinemachineBrain;
-
     public CinemachineCamera mainCamera;
     public CinemachineCamera shipCamera;
     
     public SpaceshipEntity theShip;
+
+    public Transform blackHole;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
@@ -42,10 +42,12 @@ public class MainCameraController : MonoBehaviour
                 shipCamera.Priority = 11;
                 mainCamera.Priority = 10;
                 theShip.setScale(0.05f);
+                blackHole.localScale = new Vector3(20, 20, 20);
             } else {
                 mainCamera.Priority = 11;
                 shipCamera.Priority = 10;
                 theShip.setScale(0.5f);
+                blackHole.localScale = new Vector3(10, 10, 10);
             }
         }
     }

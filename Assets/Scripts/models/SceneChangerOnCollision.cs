@@ -9,11 +9,7 @@ public class SceneChangerOnCollision : MonoBehaviour
     // Called when the object this script is attached to collides with another object
     private void OnTriggerEnter(Collider collider)
     {
-               
-     
-            Debug.Log("Collision detected with " + collider.gameObject.name);
             LoadScene();
-       
     }
 
     private void LoadScene()

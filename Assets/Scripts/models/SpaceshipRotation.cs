@@ -9,7 +9,7 @@ public class SpaceshipRotation : MonoBehaviour
     // The planet's center
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // Calculate the direction from the planet to the spaceship
         Vector3 directionToPlanet = transform.position - point.position;
