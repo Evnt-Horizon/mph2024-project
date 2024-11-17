@@ -42,12 +42,12 @@ public class Spaceship : Entity
         );
         
         
-        // Update the velocity of the object by adding the acceleration to the velocity
-        vx += ax;
+        // Update the velocity of the object by adding the acceleration to the velocity TO-DO
+        vx += ax; // To-Check
         vy += ay;
         vz += az;
         
-        // Update the position of the object by adding the velocity to the position
+        // Update the position of the object by adding the velocity to the position TO-DO
         x += vx;
         y += vy;
         z += vz;
@@ -68,18 +68,18 @@ public class Spaceship : Entity
         float STEEPNESS = 1.0f;
         return 1.0f / (1.0f + Mathf.Exp(-(x - threshold) * STEEPNESS));
     }
-
-    public Vector3 LorentzVelocityTransformation(Vector3 movingVelocity, Vector3 frameVelocity)
+    // To-DO
+    public Vector3 LorentzVelocityTransformation(Vector3 sourceVelocity, Vector3 observerVelocity)
     {
-        float v = Vector3.Magnitude(frameVelocity);
+        float v = Vector3.Magnitude(observerVelocity);
         
         if (v > 0.0)
         {
-            Vector3 velocityAxis = -frameVelocity / v;
+            Vector3 velocityAxis = -observerVelocity / v;
             float gamma = 1.0f / Mathf.Sqrt(1.0f - v * v);
             
-            float movingParameter = Vector3.Dot(movingVelocity, velocityAxis);
-            Vector3 movingPerpendicular = movingVelocity - velocityAxis * movingParameter;
+            float movingParameter = Vector3.Dot(sourceVelocity, velocityAxis);
+            Vector3 movingPerpendicular = sourceVelocity - velocityAxis * movingParameter;
 
             float denom = 1.0f + v * movingParameter;
             return (velocityAxis * (movingParameter + v) + movingPerpendicular / gamma) / denom;
@@ -87,13 +87,13 @@ public class Spaceship : Entity
         }
         
         
-        return movingVelocity;
+        return sourceVelocity;
     }
 
-    public Vector3 Contract(Vector3 position, Vector3 direction, float mult)
+    public float Contract(Vector3 position, Vector3 direction, float mult)
     {
         float par = Vector3.Dot(position, direction);
-        return (position - par * direction + direction * par * mult);
+        return (position - par * direction + direction * par * mult).magnitude;
     }
 
     public Vector3 RayTraceLogic(Vector3 cameraPos, Vector3 direction, float stepSize, int maxSteps)
