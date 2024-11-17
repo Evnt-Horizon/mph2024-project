@@ -40,7 +40,7 @@ public class Spaceship : Entity
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         double deltaTime = Time.deltaTime;
         
