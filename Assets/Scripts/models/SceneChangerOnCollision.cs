@@ -7,14 +7,13 @@ public class SceneChangerOnCollision : MonoBehaviour
     [SerializeField] private string sceneToLoad = "FinalScene";
 
     // Called when the object this script is attached to collides with another object
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        // Replace "TargetObjectName" with the name of the object you want to detect collisions with
-        if (collision.gameObject.name == "StarSparrow15")
-        {
+               
+     
             Debug.Log("Collision detected with " + collision.gameObject.name);
             LoadScene();
-        }
+       
     }
 
     private void LoadScene()
