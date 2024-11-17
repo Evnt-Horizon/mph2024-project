@@ -400,9 +400,15 @@ MonoBehaviour:
   x: 0
   y: 0
   z: 0
+  orbitPath:
+    xAxis: 10
+    zAxis: 10
+  orbitProgress: 0
+  orbitPeriod: 3
+  orbitActive: 1
   vx: 0.8
   vy: 0
-  vz: 3
+  vz: 1
   ax: 0
   ay: 0
   az: 0
@@ -490,7 +496,7 @@ Transform:
   m_GameObject: {fileID: 1048325112}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.5, y: 0, z: 0}
+  m_LocalPosition: {x: 5, y: 0, z: 5}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -603,7 +609,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 82.37185
+  field of view: 37.55607
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -630,7 +636,7 @@ Transform:
   m_GameObject: {fileID: 1480297940}
   serializedVersion: 2
   m_LocalRotation: {x: -0.00000005765922, y: 0.00000003332001, z: 1.9212058e-15, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -4}
+  m_LocalPosition: {x: 0, y: 0, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -715,9 +721,33 @@ PrefabInstance:
       propertyPath: shipCamera
       value: 
       objectReference: {fileID: 1601587570}
+    - target: {fileID: 2085174059695334406, guid: 682c6ae17278d4a4fb24ce9727af0cbc, type: 3}
+      propertyPath: Width
+      value: 17
+      objectReference: {fileID: 0}
     - target: {fileID: 3329674301833201221, guid: 682c6ae17278d4a4fb24ce9727af0cbc, type: 3}
       propertyPath: m_Name
       value: OverviewCamera
+      objectReference: {fileID: 0}
+    - target: {fileID: 4689003155965929213, guid: 682c6ae17278d4a4fb24ce9727af0cbc, type: 3}
+      propertyPath: Orbits.Top.Height
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4689003155965929213, guid: 682c6ae17278d4a4fb24ce9727af0cbc, type: 3}
+      propertyPath: Orbits.Top.Radius
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4689003155965929213, guid: 682c6ae17278d4a4fb24ce9727af0cbc, type: 3}
+      propertyPath: Orbits.Bottom.Height
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4689003155965929213, guid: 682c6ae17278d4a4fb24ce9727af0cbc, type: 3}
+      propertyPath: Orbits.Bottom.Radius
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4689003155965929213, guid: 682c6ae17278d4a4fb24ce9727af0cbc, type: 3}
+      propertyPath: Orbits.Center.Radius
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4946519493436294778, guid: 682c6ae17278d4a4fb24ce9727af0cbc, type: 3}
       propertyPath: Target.TrackingTarget
@@ -733,7 +763,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6436517003243865141, guid: 682c6ae17278d4a4fb24ce9727af0cbc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 6436517003243865141, guid: 682c6ae17278d4a4fb24ce9727af0cbc, type: 3}
       propertyPath: m_LocalRotation.w

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using DefaultNamespace;
 using DefaultNamespace.models;
 using Unity.Mathematics.Geometry;
@@ -12,6 +13,13 @@ using Math = Unity.Mathematics.Geometry.Math;
  */
 public class Spaceship : Entity
 {
+    public OrbitPath orbitPath;
+
+    [Range(0.0f, 1.0f)]
+    public float orbitProgress = 0f;
+    public float orbitPeriod = 3f;
+    public bool orbitActive = true;
+    
     // Velocity of the object
     public double vx, vy, vz;
     // Acceleration of the object
@@ -23,60 +31,98 @@ public class Spaceship : Entity
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Initialize the position of the object by reading the transform component of the object
-        x = transform.position.x;
-        y = transform.position.y;
-        z = transform.position.z;
-
-        Vector3 oPos = new Vector3((float) x, (float) y, (float) z);
+        // ----
+        // Ver 1 Orbit
+        // // Initialize the position of the object by reading the transform component of the object
+        // x = transform.position.x;
+        // y = transform.position.y;
+        // z = transform.position.z;
+        //
+        // Vector3 oPos = new Vector3((float) x, (float) y, (float) z);
+        //
+        // // Calculate the initial velocity of the object
+        // // vx = CalculateTangentialShipVelocity(oPos);
+        // // vy = 0.0f;
+        // // vz = 0.0f;
+        //
+        // // Calculate the initial acceleration of the object
+        // // g = CalculateCentripitalAcceleration(oPos);
+        // ---
         
-        // Calculate the initial velocity of the object
-        // vx = CalculateTangentialShipVelocity(oPos);
-        // vy = 0.0f;
-        // vz = 0.0f;
-        
-        // Calculate the initial acceleration of the object
-        // g = CalculateCentripitalAcceleration(oPos);
+        if (transform == null)
+        {
+            orbitActive = false;
+            return;
+        }
+        StartCoroutine(AnimateOrbit());
+    }
+    
+    // ---
+    // Ver 2 Orbit
+    void SetOrbitPos()
+    {
+        Vector2 orbitPos = orbitPath.Evaluate(orbitProgress);
+        transform.localPosition = new Vector3(orbitPos.x, 0, orbitPos.y);
     }
 
-    // Update is called once per frame
+    IEnumerator AnimateOrbit()
+    {
+        if (orbitPeriod < 0.1f)
+        {
+            orbitPeriod = 0.1f;
+        }
+        
+        float orbitSpeed = 1f / orbitPeriod;
+        while (orbitActive)
+        {
+            orbitProgress += Time.deltaTime * orbitSpeed;
+            orbitProgress %= 1f;
+            SetOrbitPos();
+            yield return null;
+        }
+    }
+    // ---
+    
     void FixedUpdate()
     {
-        double deltaTime = Time.deltaTime;
-        
-        x = transform.position.x;
-        y = transform.position.y;
-        z = transform.position.z;
-        
-        // As the object moves in circle, we need to consider the centrifulgal force
-        // We calculate the acceleration of the object by using the formula a = v^2 / r
-        // r will be from the center of the blackhole (0, 0, 0)
-        double r = new Vector3((float) x, (float) y, (float) z).magnitude;
-        
-        // Calculate the acceleration of the object in each axis using trigonometry
-        // Angle between the direction vector and the x-axis
-        float angleX = Mathf.Acos((float) (x / r));
-        // Angle between the direction vector and the y-axis
-        float angleY = 0.0f;    // We keep this at 0 because we don't want to move in the y-axis.
-        // Angle between the direction vector and the z-axis
-        float angleZ = Mathf.Acos((float) (z / r));
-        
-        ax = g * Mathf.Cos(angleX);
-        ay = 0.0f; // We keep this at 0 because we don't want to move in the y-axis.
-        az = g * Mathf.Cos(angleZ);
-        
-        // Update the velocity of the object by adding the acceleration to the velocity TO-DO
-        vx += ax * deltaTime; // TO-CHECK
-        vy += ay * deltaTime;
-        vz += az * deltaTime;
-        
-        // Update the position of the object by adding the velocity to the position TO-DO
-        x += vx * deltaTime; // TO-CHECK
-        y += vy * deltaTime;
-        z += vz * deltaTime;
-        
-        // Update the transform component of the object with the new position
-        transform.position = new Vector3((float) x, (float) y, (float) z);
+        // ----
+        // Ver 1 Orbit
+        // double deltaTime = Time.deltaTime;
+        //
+        // x = transform.position.x;
+        // y = transform.position.y;
+        // z = transform.position.z;
+        //
+        // // As the object moves in circle, we need to consider the centrifulgal force
+        // // We calculate the acceleration of the object by using the formula a = v^2 / r
+        // // r will be from the center of the blackhole (0, 0, 0)
+        // double r = new Vector3((float) x, (float) y, (float) z).magnitude;
+        //
+        // // Calculate the acceleration of the object in each axis using trigonometry
+        // // Angle between the direction vector and the x-axis
+        // float angleX = Mathf.Acos((float) (x / r));
+        // // Angle between the direction vector and the y-axis
+        // float angleY = 0.0f;    // We keep this at 0 because we don't want to move in the y-axis.
+        // // Angle between the direction vector and the z-axis
+        // float angleZ = Mathf.Acos((float) (z / r));
+        //
+        // ax = g * Mathf.Cos(angleX);
+        // ay = 0.0f; // We keep this at 0 because we don't want to move in the y-axis.
+        // az = g * Mathf.Cos(angleZ);
+        //
+        // // Update the velocity of the object by adding the acceleration to the velocity TO-DO
+        // vx += ax * deltaTime; // TO-CHECK
+        // vy += ay * deltaTime;
+        // vz += az * deltaTime;
+        //
+        // // Update the position of the object by adding the velocity to the position TO-DO
+        // x += vx * deltaTime; // TO-CHECK
+        // y += vy * deltaTime;
+        // z += vz * deltaTime;
+        //
+        // // Update the transform component of the object with the new position
+        // transform.position = new Vector3((float) x, (float) y, (float) z);
+        // ---
     }
 
     public double SmoothStep(double x, double threshold)
