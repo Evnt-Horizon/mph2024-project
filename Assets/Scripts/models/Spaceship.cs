@@ -32,6 +32,10 @@ public class Spaceship : Entity
     // Update is called once per frame
     void Update()
     {
+        x = transform.position.x;
+        y = transform.position.y;
+        z = transform.position.z;
+        
         // As the object moves in circle, we need to consider the centrifulgal force
         // We calculate the acceleration of the object by using the formula a = v^2 / r
         // r will be from the center of the blackhole (0, 0, 0)
