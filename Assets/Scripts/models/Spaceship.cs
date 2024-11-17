@@ -172,9 +172,9 @@ public class Spaceship : Entity
         return relativeTime;
     }
     
-    public float CalculatetangentialShipVelocity(Vector3 oPos)
+    public double CalculatetangentialShipVelocity(Vector3 oPos)
     {
-        return Mathf.Sqrt(((Constants.G * Constants.M) / Constants.r * (1 - (Constants.RS / oPos.magnitude))));
+        return Mathf.Sqrt((((Constants.G * Constants.M) / oPos.magnitude) * (1 - (Constants.RS / oPos.magnitude))));
     }
 
     public float CalculateCentripitalAcceleration(Vector3 oPos)
