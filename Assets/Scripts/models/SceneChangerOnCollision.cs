@@ -7,11 +7,11 @@ public class SceneChangerOnCollision : MonoBehaviour
     [SerializeField] private string sceneToLoad = "FinalScene";
 
     // Called when the object this script is attached to collides with another object
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider collider)
     {
                
      
-            Debug.Log("Collision detected with " + collision.gameObject.name);
+            Debug.Log("Collision detected with " + collider.gameObject.name);
             LoadScene();
        
     }

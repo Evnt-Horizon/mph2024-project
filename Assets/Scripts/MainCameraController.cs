@@ -29,10 +29,10 @@ public class MainCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float zoomFactor = Input.GetAxis("Mouse ScrollWheel");
+        float zoomFactor = -Input.GetAxis("Mouse ScrollWheel");
         if(zoomFactor != 0)
         {
-            cinemachineFollowZoom.Width = Mathf.Clamp(cinemachineFollowZoom.Width + zoomFactor, 2, 10);
+            cinemachineFollowZoom.Width = Mathf.Clamp(cinemachineFollowZoom.Width + zoomFactor, 0, 25);
         }
 
         if (Input.GetKeyDown(KeyCode.S))
